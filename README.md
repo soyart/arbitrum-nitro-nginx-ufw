@@ -1,4 +1,4 @@
-# arbitrum-nitro
+# arbitrum-nitro-nginx-ufw
 
 ## No `docker-compose`
 
@@ -10,25 +10,25 @@ This bypasses `ufw` rules, and to set firewall up requires tedious `iptables` co
 
 ## Steps
 
-- Customize `start.sh`, `Dockerfile`, `ufw-hosts.sh` to your needs.
+1. Customize [`start.sh`](./start.sh), [`Dockerfile`](./Dockerfile), [`ufw-hosts.sh`](./ufw-hosts.sh), and [`ufw-allow.sh`](./ufw-allow.sh) to your needs.
 
-- Build your image:
+2. Build your image:
 ```sh
 docker build -t foo/arbnode .
 ```
 
-- Run your image:
+3. Run your image:
 ```sh
 ./docker-start.sh
 ```
 
-- Check if the Docker node works (we assume that `start.sh` specifies `--http.port=6969`):
+4. Check if the Docker node works (we assume that `start.sh` specifies `--http.port=6969`):
 
 ```sh
 ./check_conn.sh http://localhost:6969;
 ```
 
-- Configure and start NGINX
+5. Configure and start NGINX
 ```sh
 cp arb_nitro_proxy /etc/nginx/sites-available;
 ln -s /etc/nginx/sites-available/arb_nitro_proxy /etc/nginx/sites-enabled/arb_nitro_proxy;
@@ -36,13 +36,13 @@ ln -s /etc/nginx/sites-available/arb_nitro_proxy /etc/nginx/sites-enabled/arb_ni
 systemctl restart nginx;
 ```
 
-- Check if NGINX reverse proxy works
+6. Check if NGINX reverse proxy works
 ```sh
 ./check_conn.sh http://localhost:8547; # Check on loopback
 ./check_conn.sh ${public_ip}:8547 # Check on public interface
 ```
 
-- Enable firewall
+7. Enable firewall
 ```sh
 ./ufw-allow.sh;
 ufw enable;
